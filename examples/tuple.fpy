@@ -1,0 +1,28 @@
+
+// Tuples are immutable groups of values
+let myTuple = (1, "hoi");
+Tuple<int, string> copy = myTuple;
+
+// A tuple of the size 2 is called a pair
+Pair<int, string> myPair = myTuple;
+
+// This is how we read Date
+print(myPair.getFirst());
+print(myPair.getLast());
+print(myPair.get(1));
+print(myPair.length());
+
+class Tuple<T1, T2, ..., TX> {
+    private Array<int
+
+    Date(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
+    first(): T1 {
+        // ...
+        return "";
+    }
+}

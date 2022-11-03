@@ -1,0 +1,10 @@
+
+string something;
+string myString = "hello";
+int myInt = 7;
+
+print(something) //should be ""
+
+let myFloat = 6.0;
+print(typeOf(myFloat)) //should be "float"
+number myNumber = myFloat

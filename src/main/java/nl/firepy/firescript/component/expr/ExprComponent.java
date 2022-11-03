@@ -11,7 +11,11 @@ public abstract class ExprComponent implements FireScriptComponent {
         this.value = value;
     }
 
-    abstract boolean isStatic();
+    /**
+     * Can this value be changed on runtime?
+     * @return true if the value is determined on compile time
+     */
+    public abstract boolean isStatic();
 
     public Value getValue() {
         return value;

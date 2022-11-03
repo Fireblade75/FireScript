@@ -1,17 +1,14 @@
-package nl.firepy.firescript.component.expr;
+package nl.firepy.firescript.component.legacy.expr;
 
 import java.util.ArrayList;
 
+import nl.firepy.firescript.component.expr.ExprComponent;
 import nl.firepy.firescript.type.StdType;
 import nl.firepy.firescript.type.Value;
 
-public class FloatLiteral extends ExprComponent {
-
-    double floatValue;
-
-    public FloatLiteral(double floatValue) {
-        super(new Value(StdType.FLOAT, false));
-        this.floatValue = floatValue;
+public class NullLiteral extends ExprComponent {
+    public NullLiteral() {
+        super(new Value(StdType.OBJECT, false));
     }
 
     @Override
@@ -22,7 +19,7 @@ public class FloatLiteral extends ExprComponent {
     @Override
     public ArrayList<String> generateCode() {
         ArrayList<String> asm = new ArrayList<>();
-        asm.add(Double.toString(floatValue));
+        asm.add("\taconst_null");
         return asm;
     }
 }

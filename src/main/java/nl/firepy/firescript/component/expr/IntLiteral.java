@@ -7,22 +7,22 @@ import nl.firepy.firescript.type.Value;
 
 public class IntLiteral extends ExprComponent {
 
-    private int intValue;
+    private long intValue;
 
-    public IntLiteral(int intValue) {
+    public IntLiteral(long intValue) {
         super(new Value(StdType.INT, false));
         this.intValue = intValue;
     }
 
     @Override
-    boolean isStatic() {
+    public boolean isStatic() {
         return true;
     }
 
     @Override
     public ArrayList<String> generateCode() {
         ArrayList<String> asm = new ArrayList<>();
-        asm.add("\tbipush " + intValue);
+        asm.add(Long.toString(intValue));
         return asm;
     }
 }

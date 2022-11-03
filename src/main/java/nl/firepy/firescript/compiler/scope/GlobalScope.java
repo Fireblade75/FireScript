@@ -1,20 +1,20 @@
 package nl.firepy.firescript.compiler.scope;
 
-import nl.firepy.firescript.type.ClassHeader;
+import nl.firepy.firescript.type.CodeFileDescriptor;
 
 public class GlobalScope {
 
     private String className;
-    private ClassHeader classHeader;
+    private CodeFileDescriptor classHeader;
 
 
-    public GlobalScope(String className, ClassHeader classHeader) {
+    public GlobalScope(String className, CodeFileDescriptor classHeader) {
         super();
         this.className = className;
         this.classHeader = classHeader;
     }
 
-    public ClassHeader getClassHeader() {
+    public CodeFileDescriptor getClassHeader() {
         return classHeader;
     }
 }

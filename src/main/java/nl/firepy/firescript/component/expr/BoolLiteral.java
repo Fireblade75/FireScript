@@ -15,14 +15,14 @@ public class BoolLiteral extends ExprComponent {
     }
 
     @Override
-    boolean isStatic() {
+    public boolean isStatic() {
         return true;
     }
 
     @Override
     public ArrayList<String> generateCode() {
         ArrayList<String> asm = new ArrayList<>();
-        asm.add("\ticonst_" + (boolValue ? "1" : "0"));
+        asm.add(Boolean.toString(boolValue));
         return asm;
     }
 }

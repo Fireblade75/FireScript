@@ -1,8 +1,8 @@
 package nl.firepy.firescript.component;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface FireScriptComponent {
 
-    ArrayList<String> generateCode();
+    List<String> generateCode();
 }

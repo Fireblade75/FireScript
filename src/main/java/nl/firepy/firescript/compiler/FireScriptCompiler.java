@@ -1,6 +1,6 @@
 package nl.firepy.firescript.compiler;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.CharStream;
@@ -8,16 +8,18 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import nl.firepy.firescript.compiler.FireScriptParser.ProgramContext;
+import nl.firepy.firescript.component.FireScriptComponent;
 import nl.firepy.firescript.error.SyntaxErrorException;
 import nl.firepy.firescript.error.SyntaxErrorListener;
-import nl.firepy.firescript.type.ClassHeader;
+import nl.firepy.firescript.type.CodeFileDescriptor;
 
 public class FireScriptCompiler {
     
     public String compileFireScript(String sourceCode) throws CompilerException {
         // Create lexer and run scanner to create stream of tokens
         CharStream charStream = CharStreams.fromString(sourceCode);
-        VigloLexer lexer = new VigloLexer(charStream);
+        FireScriptLexer lexer = new FireScriptLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
         // Create parser and feed it the tokens
@@ -25,22 +27,24 @@ public class FireScriptCompiler {
         SyntaxErrorListener errorListener = new SyntaxErrorListener();
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
-        ParseTree program = parser.program();
+        ProgramContext program = parser.program();
 
         if (errorListener.hasSyntaxErrors()) {
             throw new SyntaxErrorException(errorListener.getSyntaxErrors());
         } else {
-            FireScriptMethodVisitor headerBuilder = new FireScriptMethodVisitor();
+            // FireScriptMethodVisitor headerBuilder = new FireScriptMethodVisitor();
             FireScriptTypeVisitor typeChecker = new FireScriptTypeVisitor();
             FireScriptCodeVisitor visitor = new FireScriptCodeVisitor();
 
-                headerBuilder.visit(program);
-                ClassHeader classHeader = headerBuilder.getClassHeader();
+                // headerBuilder.visit(program);
+                // ClassHeader classHeader = headerBuilder.getClassHeader();
 
-                typeChecker.setClassHeader(classHeader);
-                visitor.setClassHeader(classHeader);
-                typeChecker.visit(program);
-                ArrayList<String> prog = visitor.visit(program).generateCode();
+                // typeChecker.setClassHeader(classHeader);
+                // visitor.setClassHeader(classHeader);
+                CodeFileDescriptor codeFileDescriptor = new CodeFileDescriptor("main");
+                typeChecker.visitCodeFile(codeFileDescriptor, program);
+                FireScriptComponent fireScriptComponent = visitor.visitCodeFile(codeFileDescriptor, program);
+                List<String> prog = fireScriptComponent.generateCode();
 
                 String code = prog.stream().collect(Collectors.joining("\n"));
 

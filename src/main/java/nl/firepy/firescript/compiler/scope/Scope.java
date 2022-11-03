@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nl.firepy.firescript.compiler.FunctionDescriptor;
-import nl.firepy.firescript.type.ClassHeader;
+import nl.firepy.firescript.type.CodeFileDescriptor;
 import nl.firepy.firescript.type.FieldValue;
 import nl.firepy.firescript.type.Value;
 
@@ -53,7 +53,7 @@ public class Scope {
         } else {
             String fieldType = getClassHeader().getField(label);
             if(fieldType != null) {
-                String className = getClassHeader().getClassName();
+                String className = getClassHeader().getSourceName();
                 return new FieldValue(label, fieldType, className);
             }
             return null;
@@ -134,7 +134,7 @@ public class Scope {
         }
     }
 
-    private ClassHeader getClassHeader() {
+    private CodeFileDescriptor getClassHeader() {
         if(globalScope != null) {
             return globalScope.getClassHeader();
         } else {

@@ -3,7 +3,7 @@ package nl.firepy.firescript.compiler;
 import java.util.ArrayList;
 
 import nl.firepy.firescript.component.FunctionComponent;
-import nl.firepy.firescript.component.ParamList;
+import nl.firepy.firescript.component.legacy.ParamList;
 import nl.firepy.firescript.type.TypeConverter;
 
 public class FunctionDescriptor {

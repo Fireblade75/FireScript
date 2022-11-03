@@ -1,0 +1,41 @@
+
+
+
+
+// Providing a class with an empty contructor
+@Provide
+class SimpleIntReader {
+    int nextInt() {
+        return 4;
+    }
+}
+
+// Providing a class with an constructor with arguments
+class ConfigurableIntReader {
+    private mutable int value;
+
+    ConfigurableIntReader(int value) {
+        this.value = value;
+    }
+
+    setValue(int value) {
+        this.value = value;
+    }
+
+    int nextInt() {
+        return value;
+    }
+}
+
+// you can only provde constants, vars will fail
+@Provide
+const configurableIntReader = new ConfigurableIntReader();
+
+class MyClass {
+    @Inject
+    SimpleIntReader intReader;
+
+    int getInt() {
+        return intReader.nextInt();
+    }
+}

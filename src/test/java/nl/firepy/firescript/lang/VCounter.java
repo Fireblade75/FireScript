@@ -1,5 +1,7 @@
 package nl.firepy.firescript.lang;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 import nl.firepy.firescript.compiler.FireScriptCompiler;
@@ -8,23 +10,32 @@ public class VCounter {
     
     FireScriptCompiler target = new FireScriptCompiler();
 
-    private final String exampleProgram = """
-        class Counter {
-            func Counter(): void => {
-                twice(5)
-            }
-
-            static func twice(val: double): void => {
-                echo val * 2
-            }
-        }
-    """;
-
     @Test
-    void compileBasicStruct() {
-        String result = target.compileFireScript(exampleProgram);
-        System.out.println(result);
-        
+    void defineStatement() {
+        String defineStatement = "let loc : int;";
+        String result = target.compileFireScript(defineStatement);
+        assertEquals("local loc", result);
     }
 
+    @Test
+    void assignInferStatement() {
+        String assigmentStatement = "let loc = 8;";
+        String result = target.compileFireScript(assigmentStatement);
+        assertEquals("local loc = 8", result);
+    }
+
+    @Test
+    void assignConstStatement() {
+        String assigmentStatement = "const loc = 8;";
+        String result = target.compileFireScript(assigmentStatement);
+        assertEquals("local loc = 8", result);
+    }
+
+    @Test
+    void reAssignStatement() {
+        String assigmentStatement = "let loc = 8; loc = 5;";
+        String result = target.compileFireScript(assigmentStatement);
+        System.out.println(result);
+        // assertEquals("local loc = 8", result);
+    }
 }

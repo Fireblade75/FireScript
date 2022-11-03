@@ -3,7 +3,8 @@ package nl.firepy.firescript.component;
 import java.util.ArrayList;
 
 import nl.firepy.firescript.compiler.scope.Scope;
-import nl.firepy.firescript.component.expr.FunctionExpression;
+import nl.firepy.firescript.component.legacy.expr.FunctionExpression;
+import nl.firepy.firescript.component.legacy.ParamList;
 import nl.firepy.firescript.type.TypeConverter;
 
 public class FunctionComponent implements FireScriptComponent {

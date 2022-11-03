@@ -1,0 +1,5 @@
+
+// create an empty array
+let emptyArr = new Array<int>()
+let filledArr = Array.of(1, 2, 3);
+
