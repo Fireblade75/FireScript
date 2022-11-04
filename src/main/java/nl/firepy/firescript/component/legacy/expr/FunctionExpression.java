@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import nl.firepy.firescript.compiler.scope.Scope;
 import nl.firepy.firescript.component.BlockComponent;
-import nl.firepy.firescript.component.FireScriptComponent;
+import nl.firepy.firescript.component.internal.FireScriptComponent;
 import nl.firepy.firescript.component.legacy.ParamList;
 import nl.firepy.firescript.type.Value;
 
@@ -21,7 +21,7 @@ public class FunctionExpression implements FireScriptComponent {
         this.scope = scope;
 
         for(ParamList.ParamListItem param : paramList.items()) {
-            scope.addValue(param.getName(), new Value(param.getType(), false));
+            // scope.addValue(param.getName(), new Value(param.getType(), false));
         }
     }
 

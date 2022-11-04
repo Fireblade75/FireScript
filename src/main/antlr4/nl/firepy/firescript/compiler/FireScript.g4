@@ -64,7 +64,7 @@ returnStatement: RETURN exp LINE_END;
 
 stringLiteral: STRING_STRING;
 numberLiteral: intLiteral | floatLiteral ;
-type: NAME | INT | FLOAT | BOOL | NUMBER;
+type: NAME | INT | FLOAT | BOOL | STRING;
 
 math_operator: PLUS | MINUS | MULTIPLY | DEVIDE;
 eq_operator: OP_EQ | OP_NOT_EQ;
@@ -89,7 +89,7 @@ BOOL_LITERAL: 'true' | 'false';
 INT: 'int';
 FLOAT: 'float';
 BOOL: 'bool';
-NUMBER: 'number';
+STRING: 'string';
 
 CONST: 'const';
 LET: 'let';

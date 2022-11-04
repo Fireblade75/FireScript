@@ -1,13 +1,12 @@
 package nl.firepy.firescript.component.legacy;
 
-import nl.firepy.firescript.component.legacy.expr.EmptyComponent;
 import nl.firepy.firescript.type.TypeConverter;
 import nl.firepy.firescript.compiler.FireScriptParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParamList extends EmptyComponent {
+public class ParamList {
 
     private ArrayList<ParamListItem> params = new ArrayList<>();
 

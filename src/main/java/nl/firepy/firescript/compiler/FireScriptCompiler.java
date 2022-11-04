@@ -9,7 +9,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import nl.firepy.firescript.compiler.FireScriptParser.ProgramContext;
-import nl.firepy.firescript.component.FireScriptComponent;
+import nl.firepy.firescript.component.internal.FireScriptBlock;
+import nl.firepy.firescript.component.internal.FireScriptComponent;
 import nl.firepy.firescript.error.SyntaxErrorException;
 import nl.firepy.firescript.error.SyntaxErrorListener;
 import nl.firepy.firescript.type.CodeFileDescriptor;
@@ -43,7 +44,7 @@ public class FireScriptCompiler {
                 // visitor.setClassHeader(classHeader);
                 CodeFileDescriptor codeFileDescriptor = new CodeFileDescriptor("main");
                 typeChecker.visitCodeFile(codeFileDescriptor, program);
-                FireScriptComponent fireScriptComponent = visitor.visitCodeFile(codeFileDescriptor, program);
+                FireScriptBlock fireScriptComponent = visitor.visitCodeFile(codeFileDescriptor, program);
                 List<String> prog = fireScriptComponent.generateCode();
 
                 String code = prog.stream().collect(Collectors.joining("\n"));

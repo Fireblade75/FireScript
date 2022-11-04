@@ -3,12 +3,12 @@ package nl.firepy.firescript.component.expr;
 import nl.firepy.firescript.component.internal.FireScriptExpression;
 import nl.firepy.firescript.type.FSType;
 
-public class BoolLiteral implements FireScriptExpression {
+public class StringLiteral implements FireScriptExpression {
 
-    private boolean boolValue;
+    private String stringValue;
 
-    public BoolLiteral(boolean boolValue) {
-        this.boolValue = boolValue;
+    public StringLiteral(String stringValue) {
+        this.stringValue = stringValue;
     }
 
     @Override
@@ -18,11 +18,12 @@ public class BoolLiteral implements FireScriptExpression {
 
     @Override
     public FSType getType() {
-        return FSType.BOOL;
+        return FSType.STRING;
     }
 
     @Override
     public String generateCode() {
-        return Boolean.toString(boolValue);
+        return "\"" + stringValue + "\"";
     }
 }
+

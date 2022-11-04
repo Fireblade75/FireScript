@@ -1,28 +1,28 @@
 package nl.firepy.firescript.component.expr;
 
-import java.util.ArrayList;
+import nl.firepy.firescript.component.internal.FireScriptExpression;
+import nl.firepy.firescript.type.FSType;
 
-import nl.firepy.firescript.type.StdType;
-import nl.firepy.firescript.type.Value;
-
-public class IntLiteral extends ExprComponent {
+public class IntLiteral implements FireScriptExpression {
 
     private long intValue;
 
     public IntLiteral(long intValue) {
-        super(new Value(StdType.INT, false));
         this.intValue = intValue;
     }
 
     @Override
-    public boolean isStatic() {
+    public boolean isConstant() {
         return true;
     }
 
     @Override
-    public ArrayList<String> generateCode() {
-        ArrayList<String> asm = new ArrayList<>();
-        asm.add(Long.toString(intValue));
-        return asm;
+    public FSType getType() {
+        return FSType.INT;
+    }
+
+    @Override
+    public String generateCode() {
+        return Long.toString(intValue);
     }
 }

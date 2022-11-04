@@ -28,21 +28,21 @@ public class FunctionCall extends ExprComponent {
     @Override
     public ArrayList<String> generateCode() {
         ArrayList<String> asm = new ArrayList<>();
-        FunctionDescriptor function = scope.getFunction(name);
-        ArrayList<String> paramTypes = function.getParamTypes();
-        asm.add("\taload_0");
-        for(int i = 0; i < exprList.size(); i++) {
-            ExprComponent expr = exprList.get(i);
-            String exprType = expr.getValue().getType(scope);
-            String paramType = paramTypes.get(i);
+        // FunctionDescriptor function = scope.getFunction(name);
+        // ArrayList<String> paramTypes = function.getParamTypes();
+        // asm.add("\taload_0");
+        // for(int i = 0; i < exprList.size(); i++) {
+        //     ExprComponent expr = exprList.get(i);
+        //     String exprType = expr.getValue().getType(scope);
+        //     String paramType = paramTypes.get(i);
 
-            asm.addAll(NumberConverter.loadExpr(expr, exprType, paramType));
-        }
-        if(function.isStatic()) {
-            asm.add("\tinvokestatic " + function.getJasminCall());
-        } else {
-            asm.add("\tinvokevirtual " + function.getJasminCall());
-        }
+        //     asm.addAll(NumberConverter.loadExpr(expr, exprType, paramType));
+        // }
+        // if(function.isStatic()) {
+        //     asm.add("\tinvokestatic " + function.getJasminCall());
+        // } else {
+        //     asm.add("\tinvokevirtual " + function.getJasminCall());
+        // }
         return asm;
     }
 }

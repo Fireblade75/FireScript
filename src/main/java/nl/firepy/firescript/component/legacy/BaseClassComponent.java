@@ -2,7 +2,7 @@ package nl.firepy.firescript.component.legacy;
 
 import java.util.ArrayList;
 
-import nl.firepy.firescript.component.FireScriptComponent;
+import nl.firepy.firescript.component.internal.FireScriptComponent;
 
 public abstract class BaseClassComponent implements FireScriptComponent {
 

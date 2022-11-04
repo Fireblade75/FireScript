@@ -1,61 +1,44 @@
 package nl.firepy.firescript.compiler.scope;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import nl.firepy.firescript.compiler.FunctionDescriptor;
-import nl.firepy.firescript.type.CodeFileDescriptor;
-import nl.firepy.firescript.type.FieldValue;
-import nl.firepy.firescript.type.Value;
+import nl.firepy.firescript.component.expr.BlockVariable;
+import nl.firepy.firescript.component.expr.RootVariable;
+import nl.firepy.firescript.component.expr.Variable;
+import nl.firepy.firescript.type.FSType;
 
 public class Scope {
-
-    private GlobalScope globalScope;
     private Scope parent = null;
-    private HashMap<String, Value> valueMap = new HashMap<>();
-    private ArrayList<String> labelList = new ArrayList<>();
-    private int childLocals = 0;
-    private int labelCounter = 0;
-    private ArrayList<Scope> children = new ArrayList<>();
-    private String returnType;
+    private HashMap<String, Variable> valueMap = new HashMap<>();
 
-    public Scope(GlobalScope globalScope, boolean isStatic) {
-        this.globalScope = globalScope;
-        if(!isStatic) {
-            addValue("this", new Value("object", true));
-        }
+    public Scope() {
     }
 
     public Scope(Scope scope) {
         parent = scope;
-        parent.addChild(this);
-        labelList.addAll(scope.labelList);
     }
 
-    public void addValue(String label, Value value) {
+    public void addValue(String label, FSType type, boolean isConstant) {
         if(!hasValueDirect(label)) {
-            valueMap.put(label, value);
-            labelList.add(label);
-            if(value.getStackSize() == 2) {
-                labelList.add("");
+            Variable variable;
+            if(isRoot()) {
+                variable = new RootVariable(label, type, isConstant);
+            } else {
+                variable = new BlockVariable(label, type, isConstant);
             }
+
+            valueMap.put(label, variable);
         } else {
             throw new RuntimeException("Cannot add '"+label+"' to this scope, variable already defined");
         }
     }
 
-    public Value getValue(String label) {
+    public Variable getVariable(String label) {
         if (valueMap.containsKey(label)) {
             return valueMap.get(label);
         } else if (parent != null) {
-            return parent.getValue(label);
+            return parent.getVariable(label);
         } else {
-            String fieldType = getClassHeader().getField(label);
-            if(fieldType != null) {
-                String className = getClassHeader().getSourceName();
-                return new FieldValue(label, fieldType, className);
-            }
             return null;
         }
     }
@@ -70,13 +53,6 @@ public class Scope {
         return valueMap.containsKey(label);
     }
 
-    public int getIndex(String label) {
-        if (labelList.contains(label)) {
-            return labelList.indexOf(label);
-        }
-        return -1;
-    }
-
     public Scope getParent() {
         return parent;
     }
@@ -85,88 +61,7 @@ public class Scope {
         return parent != null;
     }
 
-    public int getLocals() {
-        int locals = parent == null ? 1 : 0;
-        for(Map.Entry<String, Value> erntry : valueMap.entrySet()) {
-            locals += erntry.getValue().getStackSize();
-        }
-        for(Scope child : children) {
-            locals += child.getLocals();
-        }
-        return locals;
-    }
-
-    public void addChildLocals(int locals) {
-        this.childLocals += locals;
-    }
-
-    /**
-     * Close the scope and inform te parent
-     */
-    public void close() {
-        if (hasParent()) {
-            parent.addChildLocals(valueMap.size());
-        }
-    }
-
-    /**
-     * Get a unique label for this scope
-     * @return te unique label
-     */
-    public String getLabel() {
-        if (hasParent()) {
-            return parent.getLabel();
-        } else {
-            return "#_" + (labelCounter++);
-        }
-    }
-
-    /**
-     * Get a unique label for this scope that contains a name
-     * @param name the name of the label
-     * @return te unique label
-     */
-    public String getLabel(String name) {
-        if (hasParent()) {
-            return parent.getLabel(name);
-        } else {
-            return "#" + name + "_" + (labelCounter++);
-        }
-    }
-
-    private CodeFileDescriptor getClassHeader() {
-        if(globalScope != null) {
-            return globalScope.getClassHeader();
-        } else {
-            return parent.getClassHeader();
-        }
-    }
-
-    public FunctionDescriptor getFunction(String name) {
-        return getClassHeader().getFunction(name);
-    }
-
-    public boolean isField(String label) {
-        return getClassHeader().getField(label) != null;
-    }
-
-    /**
-     * Add a child to this scope
-     * @param scope the scope to add
-     */
-    private void addChild(Scope scope) {
-        children.add(scope);
-    }
-
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
-    }
-
-    public String getReturnType() {
-        if (hasParent()) {
-            return parent.getReturnType();
-        } else {
-            return returnType;
-        }
+    public boolean isRoot() {
+        return parent == null;
     }
 }

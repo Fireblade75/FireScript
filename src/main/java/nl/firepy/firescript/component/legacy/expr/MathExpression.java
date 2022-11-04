@@ -16,7 +16,8 @@ public class MathExpression extends ExprComponent {
     private enum MathExpressionType { PLUS, MINUS, MULTIPLY, DIVIDE }
 
     public MathExpression(ExprComponent leftExpr, ExprComponent rightExpr, String symbol, Scope scope) {
-        super(new Value(NumberConverter.superType(leftExpr, rightExpr, scope), true));
+        super(new Value("symbol", true));
+        // super(new Value(NumberConverter.superType(leftExpr, rightExpr, scope), true));
         this.leftExpr = leftExpr;
         this.rightExpr = rightExpr;
         this.scope = scope;
@@ -43,8 +44,8 @@ public class MathExpression extends ExprComponent {
         ArrayList<String> asm = new ArrayList<>();
 
         String resultType = getValue().getType(scope);
-        NumberConverter converter = new NumberConverter(scope);
-        asm.addAll(converter.loadNumber(leftExpr, rightExpr, resultType));
+        // NumberConverter converter = new NumberConverter(scope);
+        // asm.addAll(converter.loadNumber(leftExpr, rightExpr, resultType));
 
         String opperator = "\t";
         if(resultType.equals("int")) {

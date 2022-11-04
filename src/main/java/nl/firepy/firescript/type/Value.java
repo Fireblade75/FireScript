@@ -20,23 +20,6 @@ public class Value {
         return type;
     }
 
-    /**
-     * Get the type of the variable used in the Java Bytecode
-     * For example, booleans are represented by integers in the bytecode
-     * @return the name of the type
-     */
-    public String getRawType(Scope scope) {
-        if(type.equals("bool") || type.equals("char")) {
-            return "int";
-        } else {
-            return type;
-        }
-    }
-
-    public int getStackSize() {
-        return StdType.getStackSize(type);
-    }
-
     public boolean isConstant(){
         return constant;
     }

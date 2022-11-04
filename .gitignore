@@ -172,6 +172,7 @@ javac-services.0.log
 javac-services.0.log.lck
 
 code.v
+lua-playground
 
 # Maven
 target/

@@ -1,28 +1,28 @@
 package nl.firepy.firescript.component.expr;
 
-import java.util.ArrayList;
+import nl.firepy.firescript.component.internal.FireScriptExpression;
+import nl.firepy.firescript.type.FSType;
 
-import nl.firepy.firescript.type.StdType;
-import nl.firepy.firescript.type.Value;
+public class FloatLiteral implements FireScriptExpression {
 
-public class FloatLiteral extends ExprComponent {
-
-    double floatValue;
+    private double floatValue;
 
     public FloatLiteral(double floatValue) {
-        super(new Value(StdType.FLOAT, false));
         this.floatValue = floatValue;
     }
 
     @Override
-    public boolean isStatic() {
+    public boolean isConstant() {
         return true;
+    }
+    
+    @Override
+    public FSType getType() {
+        return FSType.FLOAT;
     }
 
     @Override
-    public ArrayList<String> generateCode() {
-        ArrayList<String> asm = new ArrayList<>();
-        asm.add(Double.toString(floatValue));
-        return asm;
+    public String generateCode() {
+        return Double.toString(floatValue);
     }
 }

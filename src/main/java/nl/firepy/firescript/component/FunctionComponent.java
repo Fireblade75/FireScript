@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nl.firepy.firescript.compiler.scope.Scope;
 import nl.firepy.firescript.component.legacy.expr.FunctionExpression;
+import nl.firepy.firescript.component.internal.FireScriptComponent;
 import nl.firepy.firescript.component.legacy.ParamList;
 import nl.firepy.firescript.type.TypeConverter;
 
@@ -28,7 +29,7 @@ public class FunctionComponent implements FireScriptComponent {
         ArrayList<String> asm = new ArrayList<>();
         BlockComponent blockComponent = function.getBlock();
 
-        int locals = function.getScope().getLocals();
+        // int locals = function.getScope().getLocals();
         String returnType = TypeConverter.rawToJasmin(function.getReturnType());
         String paramTypes = function.getParamList().asJasminList();
         String functionName = constructor ? "<init>" : name;
@@ -37,7 +38,7 @@ public class FunctionComponent implements FireScriptComponent {
 
         asm.add(functionLine + functionName + "(" + paramTypes + ")" + returnType);
         asm.add("\t.limit stack 10");
-        asm.add("\t.limit locals " + locals);
+        // asm.add("\t.limit locals " + locals);
 
         if(constructor) {
             asm.add("\taload_0");

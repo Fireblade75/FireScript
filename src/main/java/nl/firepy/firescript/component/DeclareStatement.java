@@ -1,14 +1,16 @@
 package nl.firepy.firescript.component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class DeclareStatement implements FireScriptComponent {
+import nl.firepy.firescript.component.internal.FireScriptBlock;
+import nl.firepy.firescript.component.internal.FireScriptExpression;
+
+public class DeclareStatement implements FireScriptBlock {
 
     private String variableName;
-    private FireScriptComponent exprComponent;
+    private FireScriptExpression exprComponent;
 
-    public DeclareStatement(String variableName, FireScriptComponent exprComponent) {
+    public DeclareStatement(String variableName, FireScriptExpression exprComponent) {
         this.variableName = variableName;
         this.exprComponent = exprComponent;
     }
@@ -17,7 +19,7 @@ public class DeclareStatement implements FireScriptComponent {
     public List<String> generateCode() {
         String line = "local " + variableName;
         if (exprComponent != null ) {
-            line += " = " + exprComponent.generateCode().stream().collect(Collectors.joining("\n"));
+            line += " = " + exprComponent.generateCode();
         }
         return List.of(line);
     }

@@ -35,7 +35,14 @@ public class VCounter {
     void reAssignStatement() {
         String assigmentStatement = "let loc = 8; loc = 5;";
         String result = target.compileFireScript(assigmentStatement);
+        assertEquals("local loc = 8\nloc = 5", result);
+    }
+
+    @Test
+    void assignDefinedStatement() {
+        String assigmentStatement = "let loc : string; loc = \"test\";";
+        String result = target.compileFireScript(assigmentStatement);
         System.out.println(result);
-        // assertEquals("local loc = 8", result);
+        assertEquals("local loc\nloc = \"test\"", result);
     }
 }

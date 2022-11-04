@@ -2,7 +2,6 @@ package nl.firepy.firescript.compiler;
 
 import nl.firepy.firescript.compiler.FireScriptParser.RootStatementContext;
 import nl.firepy.firescript.compiler.FireScriptParser.StatementContext;
-import nl.firepy.firescript.compiler.scope.GlobalScope;
 import nl.firepy.firescript.compiler.scope.Scope;
 import nl.firepy.firescript.type.CodeFileDescriptor;
 import nl.firepy.firescript.type.TypeConverter;
@@ -11,14 +10,12 @@ import java.util.ArrayList;
 
 public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
 
+    private Scope rootScope;
     private Scope scope;
-    private GlobalScope globalScope;
-    private CodeFileDescriptor classHeader;
-    private String className;
 
     public String visitCodeFile(CodeFileDescriptor classHeader, FireScriptParser.ProgramContext ctx) {
-        globalScope = new GlobalScope(classHeader.getSourceName(), classHeader);
-        scope = new Scope(globalScope, false);
+        rootScope = new Scope();
+        scope = rootScope;
         return visitProgram(ctx);
     }
 
@@ -72,58 +69,58 @@ public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
     //     return ctx.type().getText();
     // }
 
-    @Override
-    public String visitBlock(FireScriptParser.BlockContext ctx) {
-        boolean functionScope = !scope.hasParent();
-        String functionType = scope.getReturnType();
-        for(FireScriptParser.BlockStatementContext statment : ctx.blockStatement()) {
-            visit(statment);
-        }
-        for (int i = 0; i < ctx.blockStatement().size(); i++) {
-            if(!functionType.equals("void") && i == ctx.blockStatement().size() - 1 && functionScope) {
-                if(ctx.blockStatement(i).returnStatement() == null) {
-                    throw new CompilerException(ctx.blockStatement(i), "Expected return statement");
-                }
-            }
-        }
-        return "block";
-    }
+    // @Override
+    // public String visitBlock(FireScriptParser.BlockContext ctx) {
+    //     boolean functionScope = !scope.hasParent();
+    //     String functionType = scope.getReturnType();
+    //     for(FireScriptParser.BlockStatementContext statment : ctx.blockStatement()) {
+    //         visit(statment);
+    //     }
+    //     for (int i = 0; i < ctx.blockStatement().size(); i++) {
+    //         if(!functionType.equals("void") && i == ctx.blockStatement().size() - 1 && functionScope) {
+    //             if(ctx.blockStatement(i).returnStatement() == null) {
+    //                 throw new CompilerException(ctx.blockStatement(i), "Expected return statement");
+    //             }
+    //         }
+    //     }
+    //     return "block";
+    // }
 
-    @Override
-    public String visitReturnStatement(FireScriptParser.ReturnStatementContext ctx) {
-        String expType = visit(ctx.exp());
-        String functionType = scope.getReturnType();
-        if(!expType.equals(functionType) && !TypeConverter.canFreelyCast(expType, functionType)) {
-            throw new CompilerException(ctx.exp(), "Cannot return " + expType +" expected a " + functionType);
-        }
-        return super.visitReturnStatement(ctx);
-    }
+    // @Override
+    // public String visitReturnStatement(FireScriptParser.ReturnStatementContext ctx) {
+    //     String expType = visit(ctx.exp());
+    //     String functionType = scope.getReturnType();
+    //     if(!expType.equals(functionType) && !TypeConverter.canFreelyCast(expType, functionType)) {
+    //         throw new CompilerException(ctx.exp(), "Cannot return " + expType +" expected a " + functionType);
+    //     }
+    //     return super.visitReturnStatement(ctx);
+    // }
 
-    @Override
-    public String visitDeclareInferStatement(FireScriptParser.DeclareInferStatementContext ctx) {
-        String type = visit(ctx.exp());
-        boolean constant = ctx.CONST() != null;
-        scope.addValue(ctx.NAME().getText(), new Value(type, constant));
-        return visit(ctx.exp());
-    }
+    // @Override
+    // public String visitDeclareInferStatement(FireScriptParser.DeclareInferStatementContext ctx) {
+    //     String type = visit(ctx.exp());
+    //     boolean constant = ctx.CONST() != null;
+    //     scope.addValue(ctx.NAME().getText(), new Value(type, constant));
+    //     return visit(ctx.exp());
+    // }
 
-    @Override
-    public String visitAssignStatement(FireScriptParser.AssignStatementContext ctx) {
-        String label = ctx.variable().getText();
-        Value value = scope.getValue(label);
-        if(value == null) {
-            throw new CompilerException(ctx, "Variable '" + label + "' is not defined");
-        }
+    // @Override
+    // public String visitAssignStatement(FireScriptParser.AssignStatementContext ctx) {
+    //     String label = ctx.variable().getText();
+    //     Value value = scope.getValue(label);
+    //     if(value == null) {
+    //         throw new CompilerException(ctx, "Variable '" + label + "' is not defined");
+    //     }
 
-        String valueType = value.getType(scope);
-        String expType = visit(ctx.exp());
-        if (!valueType.equals(expType)) {
-            if(!TypeConverter.canFreelyCast(expType, valueType)) {
-                throw new CompilerException(ctx, "Cannot assign " + expType + " to variable '" + label + "' of type " + valueType);
-            }
-        }
-        return expType;
-    }
+    //     String valueType = value.getType(scope);
+    //     String expType = visit(ctx.exp());
+    //     if (!valueType.equals(expType)) {
+    //         if(!TypeConverter.canFreelyCast(expType, valueType)) {
+    //             throw new CompilerException(ctx, "Cannot assign " + expType + " to variable '" + label + "' of type " + valueType);
+    //         }
+    //     }
+    //     return expType;
+    // }
 
     // @Override
     // public String visitMathExpression(FireScriptParser.MathExpressionContext ctx) {
@@ -135,17 +132,17 @@ public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
     //     return visitTwoNumberExpression(ctx.left, ctx.right);
     // }
 
-    private String visitTwoNumberExpression(FireScriptParser.ExpContext left, FireScriptParser.ExpContext right) {
-        String leftType = visit(left);
-        String rightType = visit(right);
-        if(!TypeConverter.isNumber(leftType)) {
-            throw new CompilerException(left, "Expected a number, found "+leftType);
-        }
-        if(!TypeConverter.isNumber(rightType)) {
-            throw new CompilerException(right, "Expected a number, found "+rightType);
-        }
-        return TypeConverter.combineNumbers(leftType, rightType);
-    }
+    // private String visitTwoNumberExpression(FireScriptParser.ExpContext left, FireScriptParser.ExpContext right) {
+    //     String leftType = visit(left);
+    //     String rightType = visit(right);
+    //     if(!TypeConverter.isNumber(leftType)) {
+    //         throw new CompilerException(left, "Expected a number, found "+leftType);
+    //     }
+    //     if(!TypeConverter.isNumber(rightType)) {
+    //         throw new CompilerException(right, "Expected a number, found "+rightType);
+    //     }
+    //     return TypeConverter.combineNumbers(leftType, rightType);
+    // }
 
     // @Override
     // public String visitNotExpression(FireScriptParser.NotExpressionContext ctx) {
@@ -178,14 +175,14 @@ public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
     //     }
     // }
 
-    @Override
-    public String visitVariable(FireScriptParser.VariableContext ctx) {
-        Value value = scope.getValue(ctx.NAME().getText());
-        if(value == null) {
-            throw new CompilerException(ctx, "Variable '" + ctx.NAME().getText() + "' is not defined");
-        }
-        return value.getType(scope);
-    }
+    // @Override
+    // public String visitVariable(FireScriptParser.VariableContext ctx) {
+    //     Value value = scope.getValue(ctx.NAME().getText());
+    //     if(value == null) {
+    //         throw new CompilerException(ctx, "Variable '" + ctx.NAME().getText() + "' is not defined");
+    //     }
+    //     return value.getType(scope);
+    // }
 
     // @Override
     // public String visitFunctionCall(FireScriptParser.FunctionCallContext ctx) {

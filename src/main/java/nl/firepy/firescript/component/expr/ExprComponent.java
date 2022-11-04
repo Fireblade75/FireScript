@@ -1,6 +1,6 @@
 package nl.firepy.firescript.component.expr;
 
-import nl.firepy.firescript.component.FireScriptComponent;
+import nl.firepy.firescript.component.internal.FireScriptComponent;
 import nl.firepy.firescript.type.Value;
 
 public abstract class ExprComponent implements FireScriptComponent {

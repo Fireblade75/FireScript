@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import nl.firepy.firescript.compiler.scope.Scope;
 import nl.firepy.firescript.component.expr.ExprComponent;
-import nl.firepy.firescript.type.StdType;
+import nl.firepy.firescript.type.FSType;
 import nl.firepy.firescript.type.Value;
 
 public class LogicExpression extends ExprComponent {
@@ -16,7 +16,7 @@ public class LogicExpression extends ExprComponent {
     private enum LogicExpressionType { AND, OR }
 
     public LogicExpression(ExprComponent leftExpr, ExprComponent rightExpr, String symbol, Scope scope) {
-        super(new Value(StdType.BOOL, true));
+        super(new Value("BOOL", true));
         this.leftExpr = leftExpr;
         this.rightExpr = rightExpr;
         this.scope = scope;
@@ -38,32 +38,32 @@ public class LogicExpression extends ExprComponent {
     public ArrayList<String> generateCode() {
         ArrayList<String> asm = new ArrayList<>();
 
-        String trueLabel = scope.getLabel();
-        String falseLabel = scope.getLabel();
+        // String trueLabel = scope.getLabel();
+        // String falseLabel = scope.getLabel();
 
-        if(type == LogicExpressionType.AND) {
-            asm.addAll(leftExpr.generateCode());
-            asm.add("\tifeq " + falseLabel);
-            asm.addAll(rightExpr.generateCode());
-            asm.add("\tifeq " + falseLabel);
-            asm.add("\ticonst_1");
-            asm.add("\tgoto " + trueLabel);
-            asm.add(falseLabel + ":");
-            asm.add("\ticonst_0");
-            asm.add(trueLabel + ":");
-        } else {
-            String endLabel = scope.getLabel();
-            asm.addAll(leftExpr.generateCode());
-            asm.add("\tifne  " + trueLabel);
-            asm.addAll(rightExpr.generateCode());
-            asm.add("\tifeq  " + falseLabel);
-            asm.add(trueLabel + ":");
-            asm.add("\ticonst_1");
-            asm.add("\tgoto  " + endLabel);
-            asm.add(falseLabel + ":");
-            asm.add("\ticonst_0");
-            asm.add(endLabel + ":");
-        }
+        // if(type == LogicExpressionType.AND) {
+        //     asm.addAll(leftExpr.generateCode());
+        //     asm.add("\tifeq " + falseLabel);
+        //     asm.addAll(rightExpr.generateCode());
+        //     asm.add("\tifeq " + falseLabel);
+        //     asm.add("\ticonst_1");
+        //     asm.add("\tgoto " + trueLabel);
+        //     asm.add(falseLabel + ":");
+        //     asm.add("\ticonst_0");
+        //     asm.add(trueLabel + ":");
+        // } else {
+        //     String endLabel = scope.getLabel();
+        //     asm.addAll(leftExpr.generateCode());
+        //     asm.add("\tifne  " + trueLabel);
+        //     asm.addAll(rightExpr.generateCode());
+        //     asm.add("\tifeq  " + falseLabel);
+        //     asm.add(trueLabel + ":");
+        //     asm.add("\ticonst_1");
+        //     asm.add("\tgoto  " + endLabel);
+        //     asm.add(falseLabel + ":");
+        //     asm.add("\ticonst_0");
+        //     asm.add(endLabel + ":");
+        // }
         return asm;
     }
 }
