@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import nl.firepy.firescript.compiler.FireScriptCompiler;
 
-public class VCounter {
+public class BasicVariables {
     
     FireScriptCompiler target = new FireScriptCompiler();
 

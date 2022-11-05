@@ -2,7 +2,7 @@ package nl.firepy.firescript.component.legacy.expr;
 
 import java.util.ArrayList;
 
-import nl.firepy.firescript.compiler.FunctionDescriptor;
+import nl.firepy.firescript.compiler.LegacyFunctionDescriptor;
 import nl.firepy.firescript.compiler.scope.Scope;
 import nl.firepy.firescript.component.expr.ExprComponent;
 import nl.firepy.firescript.type.FunctionValue;

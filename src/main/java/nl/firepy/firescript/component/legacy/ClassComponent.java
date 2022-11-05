@@ -3,8 +3,8 @@ package nl.firepy.firescript.component.legacy;
 import java.util.ArrayList;
 import java.util.Map;
 
-import nl.firepy.firescript.type.CodeFileDescriptor;
 import nl.firepy.firescript.type.TypeConverter;
+import nl.firepy.firescript.type.descriptors.ModuleDescriptor;
 
 public class ClassComponent extends BaseClassComponent {
     // private String className;

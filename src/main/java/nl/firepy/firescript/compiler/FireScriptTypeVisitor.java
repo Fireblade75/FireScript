@@ -3,9 +3,10 @@ package nl.firepy.firescript.compiler;
 import nl.firepy.firescript.compiler.FireScriptParser.RootStatementContext;
 import nl.firepy.firescript.compiler.FireScriptParser.StatementContext;
 import nl.firepy.firescript.compiler.scope.Scope;
-import nl.firepy.firescript.type.CodeFileDescriptor;
 import nl.firepy.firescript.type.TypeConverter;
 import nl.firepy.firescript.type.Value;
+import nl.firepy.firescript.type.descriptors.ModuleDescriptor;
+
 import java.util.ArrayList;
 
 public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
@@ -13,7 +14,7 @@ public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
     private Scope rootScope;
     private Scope scope;
 
-    public String visitCodeFile(CodeFileDescriptor classHeader, FireScriptParser.ProgramContext ctx) {
+    public String visitCodeFile(ModuleDescriptor classHeader, FireScriptParser.ProgramContext ctx) {
         rootScope = new Scope();
         scope = rootScope;
         return visitProgram(ctx);

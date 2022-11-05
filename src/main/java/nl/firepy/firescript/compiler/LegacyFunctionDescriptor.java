@@ -6,14 +6,14 @@ import nl.firepy.firescript.component.FunctionComponent;
 import nl.firepy.firescript.component.legacy.ParamList;
 import nl.firepy.firescript.type.TypeConverter;
 
-public class FunctionDescriptor {
+public class LegacyFunctionDescriptor {
     private String name;
     private String className;
     private String returnType;
     private boolean isStatic;
     private ArrayList<String> paramTypes = new ArrayList<>();
 
-    public FunctionDescriptor(String name, String className, ArrayList<String> paramTypes, String returnType, boolean isStatic) {
+    public LegacyFunctionDescriptor(String name, String className, ArrayList<String> paramTypes, String returnType, boolean isStatic) {
         this.name = name;
         this.className = className;
         this.paramTypes = paramTypes;
@@ -21,7 +21,7 @@ public class FunctionDescriptor {
         this.isStatic = isStatic;
     }
 
-    public FunctionDescriptor(FunctionComponent function, String className) {
+    public LegacyFunctionDescriptor(FunctionComponent function, String className) {
         this.returnType = function.getReturnType();
         this.name = function.getName();
         this.className = className;

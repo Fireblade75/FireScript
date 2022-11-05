@@ -14,7 +14,7 @@ block: '{' blockStatement* '}';
 blockStatement: statement | returnStatement;
 statement: declareStatement
     | assignStatement
-    // | declareFunction
+    | declareFunction
     // | ifStatement
     // | chainExp
     ;
@@ -24,7 +24,7 @@ exp: boolLiteral                           #BoolExpression
     | stringLiteral                         #StringExpression
     // | NULL                                  #NullExpression
     // | '(' exp ')'                           #BracketExpression
-    // | functionStatement                     #FunctionExpression
+    | functionStatement                     #FunctionExpression
     // | chainExp                              #ChainExpression
     // | left=exp math_operator right=exp      #MathExpression
     // | left=exp eq_operator right=exp        #EqualityExpression
@@ -47,11 +47,11 @@ exp: boolLiteral                           #BoolExpression
 
 // forStatement: FOR NAME IN exp block;
 
-// declareFunction: FN NAME functionStatement;
-// functionStatement: paramList ':' type '=>' block;
+declareFunction: FN NAME paramList (':' type)? block;
+functionStatement: paramList (':' type)? FN_ARROW block;
 // functionCall: NAME '(' (exp (',' exp)*)? ')';
-// paramList: '(' (paramItem (',' paramItem)*)? ')';
-// paramItem: NAME ':' type;
+paramList: '(' (paramItem (',' paramItem)*)? ')';
+paramItem: label=NAME ':' (type | NAME);
 
 
 declareStatement: (declareInferStatement | declareOnlyStatement) LINE_END;
@@ -117,6 +117,7 @@ LINE_END: ';';
 STRUCT: 'struct';
 CLASS: 'class';
 FN: 'fn';
+FN_ARROW: '->';
 
 IF_MARK: '?';
 FOR: 'for';

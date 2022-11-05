@@ -18,11 +18,14 @@ import nl.firepy.firescript.component.expr.ExprComponent;
 import nl.firepy.firescript.component.expr.IntLiteral;
 import nl.firepy.firescript.component.expr.StringLiteral;
 import nl.firepy.firescript.component.expr.TypeExpression;
+import nl.firepy.firescript.component.expr.Variable;
+import nl.firepy.firescript.component.expr.BlockVariable;
+import nl.firepy.firescript.component.expr.RootVariable;
 import nl.firepy.firescript.component.internal.FireScriptBlock;
 import nl.firepy.firescript.component.internal.FireScriptComponent;
 import nl.firepy.firescript.component.internal.FireScriptExpression;
 import nl.firepy.firescript.component.legacy.AssignStatement;
-import nl.firepy.firescript.type.CodeFileDescriptor;
+import nl.firepy.firescript.type.descriptors.ModuleDescriptor;
 
 public class FireScriptCodeVisitor extends FireScriptBaseVisitor<FireScriptComponent> {
 
@@ -30,9 +33,10 @@ public class FireScriptCodeVisitor extends FireScriptBaseVisitor<FireScriptCompo
     private Scope scope;
     private Scope rootScope;
     private String className;
-    private CodeFileDescriptor classHeader;
+    private ModuleDescriptor moduleDescriptor;
 
-    public FireScriptBlock visitCodeFile(CodeFileDescriptor classHeader, ProgramContext ctx) {
+    public FireScriptBlock visitCodeFile(ModuleDescriptor moduleDescriptor, ProgramContext ctx) {
+        this.moduleDescriptor = moduleDescriptor;
         rootScope = new Scope();
         scope = rootScope;
         return visitProgram(ctx);
@@ -105,6 +109,14 @@ public class FireScriptCodeVisitor extends FireScriptBaseVisitor<FireScriptCompo
             FireScriptExpression expression = (FireScriptExpression) rawExpression;
             boolean isConstant = ctx.CONST() != null;
             scope.addValue(ctx.NAME().toString(), expression.getType(), isConstant);
+            Variable variable;
+            if(scope.isRoot()) {
+                variable = new RootVariable(ctx.NAME().toString(), expression.getType(), isConstant);
+            } else {
+                variable = new BlockVariable(ctx.NAME().toString(), expression.getType(), isConstant);
+            }
+            scope.addVariable(variable);
+
             return new DeclareStatement(ctx.NAME().toString(), expression);
         } else {
             throw new UnsupportedOperationException("Invalid Expression Type: " + rawExpression.getClass().getName());

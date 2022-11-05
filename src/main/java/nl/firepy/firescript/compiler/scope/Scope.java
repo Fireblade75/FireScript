@@ -33,6 +33,14 @@ public class Scope {
         }
     }
 
+    public void addVariable(Variable variable) {
+        if(!hasValueDirect(variable.getVariableName())) {
+            valueMap.put(variable.getVariableName(), variable);
+        } else {
+            throw new RuntimeException("Cannot add '" + variable.getVariableName() + "' to this scope, variable already defined");
+        }
+    }
+
     public Variable getVariable(String label) {
         if (valueMap.containsKey(label)) {
             return valueMap.get(label);

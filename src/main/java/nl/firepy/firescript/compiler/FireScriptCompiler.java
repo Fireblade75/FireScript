@@ -13,7 +13,7 @@ import nl.firepy.firescript.component.internal.FireScriptBlock;
 import nl.firepy.firescript.component.internal.FireScriptComponent;
 import nl.firepy.firescript.error.SyntaxErrorException;
 import nl.firepy.firescript.error.SyntaxErrorListener;
-import nl.firepy.firescript.type.CodeFileDescriptor;
+import nl.firepy.firescript.type.descriptors.ModuleDescriptor;
 
 public class FireScriptCompiler {
     
@@ -42,7 +42,7 @@ public class FireScriptCompiler {
 
                 // typeChecker.setClassHeader(classHeader);
                 // visitor.setClassHeader(classHeader);
-                CodeFileDescriptor codeFileDescriptor = new CodeFileDescriptor("main");
+                ModuleDescriptor codeFileDescriptor = new ModuleDescriptor("main");
                 typeChecker.visitCodeFile(codeFileDescriptor, program);
                 FireScriptBlock fireScriptComponent = visitor.visitCodeFile(codeFileDescriptor, program);
                 List<String> prog = fireScriptComponent.generateCode();
