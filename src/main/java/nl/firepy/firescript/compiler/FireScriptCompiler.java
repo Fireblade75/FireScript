@@ -42,8 +42,7 @@ public class FireScriptCompiler {
 
                 // typeChecker.setClassHeader(classHeader);
                 // visitor.setClassHeader(classHeader);
-                ModuleDescriptor codeFileDescriptor = new ModuleDescriptor("main");
-                typeChecker.visitCodeFile(codeFileDescriptor, program);
+                ModuleDescriptor codeFileDescriptor = typeChecker.visitCodeFile("main", program);
                 FireScriptBlock fireScriptComponent = visitor.visitCodeFile(codeFileDescriptor, program);
                 List<String> prog = fireScriptComponent.generateCode();
 

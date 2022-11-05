@@ -5,6 +5,7 @@ import java.util.HashMap;
 import nl.firepy.firescript.compiler.LegacyFunctionDescriptor;
 import nl.firepy.firescript.component.expr.RootVariable;
 import nl.firepy.firescript.component.expr.Variable;
+import nl.firepy.firescript.type.FSType;
 
 public class ModuleDescriptor {
     
@@ -39,11 +40,20 @@ public class ModuleDescriptor {
         return functions.get(name);
     }
 
-    public void addVariable(String name, RootVariable variable) {
-        variables.put(name, variable);
+    public void addVariable(String name, FSType type, boolean isConstant) {
+        if (activeClass == null && activeFunction == null) {
+            RootVariable variable = new RootVariable(name, type, isConstant);
+            variables.put(name, variable);
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
-    public Variable getField(String label) {
+    public Variable getVariable(String label) {
         return variables.get(label);
+    }
+
+    public FSType parseType(String string) {
+        return null;
     }
 }

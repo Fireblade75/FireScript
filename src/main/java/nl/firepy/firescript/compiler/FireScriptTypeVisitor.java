@@ -1,27 +1,32 @@
 package nl.firepy.firescript.compiler;
 
+import nl.firepy.firescript.compiler.FireScriptParser.AssignStatementContext;
+import nl.firepy.firescript.compiler.FireScriptParser.DeclareInferStatementContext;
+import nl.firepy.firescript.compiler.FireScriptParser.DeclareOnlyStatementContext;
 import nl.firepy.firescript.compiler.FireScriptParser.RootStatementContext;
 import nl.firepy.firescript.compiler.FireScriptParser.StatementContext;
+import nl.firepy.firescript.compiler.FireScriptParser.StringLiteralContext;
 import nl.firepy.firescript.compiler.scope.Scope;
+import nl.firepy.firescript.component.expr.Variable;
+import nl.firepy.firescript.type.FSType;
 import nl.firepy.firescript.type.TypeConverter;
 import nl.firepy.firescript.type.Value;
 import nl.firepy.firescript.type.descriptors.ModuleDescriptor;
 
 import java.util.ArrayList;
 
-public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
+public class FireScriptTypeVisitor extends FireScriptBaseVisitor<FSType> {
 
-    private Scope rootScope;
-    private Scope scope;
+    private ModuleDescriptor moduleDescriptor;
 
-    public String visitCodeFile(ModuleDescriptor classHeader, FireScriptParser.ProgramContext ctx) {
-        rootScope = new Scope();
-        scope = rootScope;
-        return visitProgram(ctx);
+    public ModuleDescriptor visitCodeFile(String sourceName, FireScriptParser.ProgramContext ctx) {
+        this.moduleDescriptor = new ModuleDescriptor(null);
+        visitProgram(ctx);
+        return moduleDescriptor;
     }
 
     @Override
-    public String visitProgram(FireScriptParser.ProgramContext ctx) {
+    public FSType visitProgram(FireScriptParser.ProgramContext ctx) {
         for(var statement : ctx.rootStatement()) {
             visit(statement);
         }
@@ -29,7 +34,7 @@ public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
     }
 
     @Override
-    public String visitRootStatement(RootStatementContext ctx) {
+    public FSType visitRootStatement(RootStatementContext ctx) {
         return visit(ctx.statement());
     }
 
@@ -211,17 +216,48 @@ public class FireScriptTypeVisitor extends FireScriptBaseVisitor<String> {
     // }
 
     @Override
-    public String visitIntLiteral(FireScriptParser.IntLiteralContext ctx) {
-        return "int";
+    public FSType visitAssignStatement(AssignStatementContext ctx) {
+        FSType assigmentType = visit(ctx.exp());
+        Variable variable  = moduleDescriptor.getVariable(ctx.variable().getText().toString());
+        // Check if autoconvert is possible
+        if(!assigmentType.canConvertTo(variable.getType())) {
+            throw new RuntimeException("Type conversion not possible");
+        }
+        return FSType.VOID;
     }
 
     @Override
-    public String visitFloatLiteral(FireScriptParser.FloatLiteralContext ctx) {
-        return "float";
+    public FSType visitDeclareInferStatement(DeclareInferStatementContext ctx) {
+        FSType type = visit(ctx.exp());
+        boolean isConstant = ctx.CONST() != null;
+        moduleDescriptor.addVariable(ctx.NAME().toString(), type, isConstant);
+        return FSType.VOID;
     }
 
     @Override
-    public String visitBoolLiteral(FireScriptParser.BoolLiteralContext ctx) {
-        return "bool";
+    public FSType visitDeclareOnlyStatement(DeclareOnlyStatementContext ctx) {
+        FSType type = moduleDescriptor.parseType(ctx.type().getText().toString());
+        moduleDescriptor.addVariable(ctx.NAME().toString(), type, false);
+        return FSType.VOID;
+    }
+
+    @Override
+    public FSType visitStringLiteral(StringLiteralContext ctx) {
+        return FSType.STRING;
+    }
+
+    @Override
+    public FSType visitIntLiteral(FireScriptParser.IntLiteralContext ctx) {
+        return FSType.INT;
+    }
+
+    @Override
+    public FSType visitFloatLiteral(FireScriptParser.FloatLiteralContext ctx) {
+        return FSType.FLOAT;
+    }
+
+    @Override
+    public FSType visitBoolLiteral(FireScriptParser.BoolLiteralContext ctx) {
+        return FSType.BOOL;
     }
 }

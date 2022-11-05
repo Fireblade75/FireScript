@@ -6,6 +6,7 @@ import nl.firepy.firescript.compiler.FireScriptParser.DeclareInferStatementConte
 import nl.firepy.firescript.compiler.FireScriptParser.DeclareOnlyStatementContext;
 import nl.firepy.firescript.compiler.FireScriptParser.DeclareStatementContext;
 import nl.firepy.firescript.compiler.FireScriptParser.ExpContext;
+import nl.firepy.firescript.compiler.FireScriptParser.FloatLiteralContext;
 import nl.firepy.firescript.compiler.FireScriptParser.IntLiteralContext;
 import nl.firepy.firescript.compiler.FireScriptParser.ProgramContext;
 import nl.firepy.firescript.compiler.FireScriptParser.RootStatementContext;
@@ -15,6 +16,7 @@ import nl.firepy.firescript.compiler.FireScriptParser.TypeContext;
 import nl.firepy.firescript.compiler.scope.Scope;
 import nl.firepy.firescript.component.*;
 import nl.firepy.firescript.component.expr.ExprComponent;
+import nl.firepy.firescript.component.expr.FloatLiteral;
 import nl.firepy.firescript.component.expr.IntLiteral;
 import nl.firepy.firescript.component.expr.StringLiteral;
 import nl.firepy.firescript.component.expr.TypeExpression;
@@ -143,6 +145,12 @@ public class FireScriptCodeVisitor extends FireScriptBaseVisitor<FireScriptCompo
     public IntLiteral visitIntLiteral(IntLiteralContext ctx) {
         long value = Long.parseLong(ctx.getText());
         return new IntLiteral(value);
+    }
+
+    @Override
+    public FloatLiteral visitFloatLiteral(FloatLiteralContext ctx) {
+        double value = Double.parseDouble(ctx.getText());
+        return new FloatLiteral(value);
     }
 
     @Override

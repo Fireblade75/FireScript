@@ -1,0 +1,6 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "antlr4.generation": {
+        "mode": "internal"
+    }
+}
