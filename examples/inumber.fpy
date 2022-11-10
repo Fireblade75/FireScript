@@ -1,0 +1,17 @@
+
+interface INumber<T extends INumber> {
+    
+    int toInt()
+
+    float toFloat()
+
+    T absolute()
+
+    T negate()
+
+    T add(INumber value)
+
+    INumber multiply(INumber value)
+
+    INumber devide(INumber value)
+}
