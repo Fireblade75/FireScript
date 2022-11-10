@@ -1,0 +1,10 @@
+
+class Optional<T> {
+    native fucntion T get();
+
+    native fucntion T has();
+
+    native static function Optional<T> of(T object);
+
+    native static function Optional<T> empty();
+}
